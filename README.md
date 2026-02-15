@@ -50,25 +50,27 @@ Total Days: 5044
 Expected Violations (1%): 50.44
 Note: All P-Values must be > 0.05 to ACCEPT the model.
 
-Model	Violations	P-Value (POF)	P-Value (Ind)	P-Value (Joint)
-A-FIGARCH-Norm VaR	5001	nan	0.395378	nan
-GARCH-Norm VaR	4996	nan	0.472287	nan
-GJR-GARCH-Norm VaR	4995	nan	0.492891	nan
-HS VaR	72	0.004143	0.000065	0.000006
-GARCH-t VaR	69	0.012866	0.002620	0.000490
-EGARCH-t VaR	67	0.025662	0.000239	0.000097
-GJR-GARCH-t VaR	66	0.035532	0.001720	0.000806
-A-FIGARCH-t VaR	62	0.114269	0.000942	0.001211
+| Model | Violations | P-Value (POF) | P-Value (Ind) | P-Value (Joint) |
+|-------|------------|---------------|---------------|-----------------|
+| A-FIGARCH-Norm VaR | 5001 | nan | 0.395378 | nan |
+| GARCH-Norm VaR | 4996 | nan | 0.472287 | nan |
+| GJR-GARCH-Norm VaR | 4995 | nan | 0.492891 | nan |
+| HS VaR | 72 | 0.004143 | 0.000065 | 0.000006 |
+| GARCH-t VaR | 69 | 0.012866 | 0.002620 | 0.000490 |
+| EGARCH-t VaR | 67 | 0.025662 | 0.000239 | 0.000097 |
+| GJR-GARCH-t VaR | 66 | 0.035532 | 0.001720 | 0.000806 |
+| A-FIGARCH-t VaR | 62 | 0.114269 | 0.000942 | 0.001211 |
 
 --- Component VaR Analysis (Risk Contribution) ---
+| Asset | Weight | MVaR | CVaR | CVaR % |
+|-------|--------|------|------|--------|
+| SPY | 0.35 | 0.0307605 | 0.0107662 | 49.4753% |
+| QQQ | 0.30 | 0.0148301 | 0.00444902 | 20.4452% |
+| EFA | 0.15 | 0.0278333 | 0.00417499 | 19.1859% |
+| GLD | 0.10 | 0.0259685 | 0.00259685 | 11.9336% |
+| TLT | 0.10 | -0.00226325 | -0.000226325 | -1.04006% |
 
-Asset	Weight	MVaR	CVaR	CVaR %
-SPY	0.35	0.0307605	0.0107662	49.4753%
-QQQ	0.30	0.0148301	0.00444902	20.4452%
-EFA	0.15	0.0278333	0.00417499	19.1859%
-GLD	0.10	0.0259685	0.00259685	11.9336%
-TLT	0.10	-0.00226325	-0.000226325	-1.04006%
-Total Portfolio VaR (Sum of CVaR, using A-FIGARCH-t): 0.0218
+**Total Portfolio VaR (Sum of CVaR, using A-FIGARCH-t): 0.0218**
 
 FIGARCH(1,d,1)-t Model Estimated. Estimated Degrees of Freedom (nu): 7.05
 GJR-GARCH(1,1)-t Model Estimated. Estimated Degrees of Freedom (nu): 7.42
