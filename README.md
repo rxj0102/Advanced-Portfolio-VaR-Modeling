@@ -45,7 +45,8 @@ The final comparison uses the **Christoffersen Conditional Coverage test**—the
 
 ## 📈 Key Findings
 
---- Final Comparative Backtest Summary (Full Christoffersen Test) ---
+### Final Comparative Backtest Results (Full Christoffersen Test)
+
 Total Days: 5044
 Expected Violations (1%): 50.44
 Note: All P-Values must be > 0.05 to ACCEPT the model.
@@ -62,6 +63,7 @@ Note: All P-Values must be > 0.05 to ACCEPT the model.
 | A-FIGARCH-t VaR | 62 | 0.114269 | 0.000942 | 0.001211 |
 
 --- Component VaR Analysis (Risk Contribution) ---
+
 | Asset | Weight | MVaR | CVaR | CVaR % |
 |-------|--------|------|------|--------|
 | SPY | 0.35 | 0.0307605 | 0.0107662 | 49.4753% |
@@ -76,16 +78,81 @@ FIGARCH(1,d,1)-t Model Estimated. Estimated Degrees of Freedom (nu): 7.05
 GJR-GARCH(1,1)-t Model Estimated. Estimated Degrees of Freedom (nu): 7.42
 
 
-### Comparative Model Performance During 2008-2009 Financial Crisis
-The visualization in the notebook shows:
-- **HS VaR (Static, Worst)**: Blue dashed line - Rigid, fails to adapt to changing volatility
-- **GARCH-Normal (Symmetric, No Tails)**: Green line - Better but underestimates tail risk
-- **A-FIGARCH-t (Asymmetric Long Memory)**: Red line - Most adaptive, best fit during crisis
-- **Violations**: Dark red scatter points show when returns exceed VaR estimates
+### Model Performance Ranking (Best to Worst)
+| Rank | Model | Violations | P-Value (Joint) | Status |
+|------|-------|------------|-----------------|--------|
+| **1** | **A-FIGARCH-t VaR** | **62** | **0.001211** | ⚠️ **Best Performer** |
+| 2 | GJR-GARCH-t VaR | 66 | 0.000806 | ❌ Rejected |
+| 3 | EGARCH-t VaR | 67 | 0.000097 | ❌ Rejected |
+| 4 | GARCH-t VaR | 69 | 0.000490 | ❌ Rejected |
+| 5 | HS VaR | 72 | 0.000006 | ❌ Rejected |
+| 6 | GJR-GARCH-Norm VaR | 4995 | nan | ❌ Complete Failure |
+| 7 | GARCH-Norm VaR | 4996 | nan | ❌ Complete Failure |
+| 8 | A-FIGARCH-Norm VaR | 5001 | nan | ❌ Complete Failure |
+
+### Portfolio Composition
+| Ticker | Asset Description | Weight |
+|--------|-------------------|--------|
+| **SPY** | SPDR S&P 500 ETF Trust | 35% |
+| **QQQ** | Invesco QQQ Trust (Nasdaq-100) | 30% |
+| **EFA** | iShares MSCI EAFE ETF (International) | 15% |
+| **GLD** | SPDR Gold Shares | 10% |
+| **TLT** | iShares 20+ Year Treasury Bond ETF | 10% |
+
+**Data Period:** 2000-01-01 to Present  
+**Confidence Level:** 99% (α = 0.01)  
+**Historical Window:** 252 trading days (1 year)
+
+### Model Configuration Parameters
+| Model | Volatility Specification | p | o | q | Distribution |
+|-------|-------------------------|---|---|---|--------------|
+| HS VaR | Historical Simulation | N/A | N/A | N/A | Empirical |
+| GARCH-Norm VaR | GARCH | 1 | 0 | 1 | Normal |
+| GARCH-t VaR | GARCH | 1 | 0 | 1 | Student's-t |
+| GJR-GARCH-Norm VaR | GJR-GARCH | 1 | 1 | 1 | Normal |
+| GJR-GARCH-t VaR | GJR-GARCH | 1 | 1 | 1 | Student's-t |
+| A-FIGARCH-Norm VaR | FIGARCH | 1 | 1 | 1 | Normal |
+| A-FIGARCH-t VaR | FIGARCH | 1 | 1 | 1 | Student's-t |
+| EGARCH-t VaR | EGARCH | 1 | 0 | 1 | Student's-t |
+
+### Christoffersen Test Results Interpretation Guide
+| Test | Null Hypothesis | P-Value < 0.05 Indicates |
+|------|-----------------|---------------------------|
+| **POF (Unconditional Coverage)** | The model's violation rate equals the expected rate (1%) | Model systematically under- or over-estimates risk |
+| **Independence** | Violations are independent over time | Violations cluster during periods of market stress |
+| **Joint (Conditional Coverage)** | Model has correct coverage AND independent violations | Model fails either coverage or independence test |
+
+### Statistical Significance Summary
+| Model | Passes POF? (α=0.05) | Passes Independence? (α=0.05) | Passes Joint? (α=0.05) | Overall Assessment |
+|-------|----------------------|------------------------------|------------------------|-------------------|
+| HS VaR | ❌ No (0.004) | ❌ No (0.000065) | ❌ No (0.000006) | **Rejected** |
+| GARCH-Norm VaR | ❌ No (nan) | ✅ Yes (0.472) | ❌ No (nan) | **Rejected** |
+| GARCH-t VaR | ❌ No (0.013) | ❌ No (0.0026) | ❌ No (0.00049) | **Rejected** |
+| GJR-GARCH-Norm VaR | ❌ No (nan) | ✅ Yes (0.493) | ❌ No (nan) | **Rejected** |
+| GJR-GARCH-t VaR | ❌ No (0.036) | ❌ No (0.0017) | ❌ No (0.00081) | **Rejected** |
+| A-FIGARCH-Norm VaR | ❌ No (nan) | ✅ Yes (0.395) | ❌ No (nan) | **Rejected** |
+| EGARCH-t VaR | ❌ No (0.026) | ❌ No (0.00024) | ❌ No (0.000097) | **Rejected** |
+| **A-FIGARCH-t VaR** | ✅ **Yes (0.114)** | ❌ No (0.00094) | ❌ No (0.0012) | **Best Available** |
+
+### Risk Contribution Analysis
+| Asset | Weight | Risk Contribution (CVaR) | Risk/Weight Ratio |
+|-------|--------|-------------------------|-------------------|
+| SPY | 35% | 49.48% | 1.41x |
+| QQQ | 30% | 20.45% | 0.68x |
+| EFA | 15% | 19.19% | 1.28x |
+| GLD | 10% | 11.93% | 1.19x |
+| TLT | 10% | -1.04% | -0.10x |
+
+### Key Mathematical Formulations
+| Model | Variance Equation |
+|-------|-------------------|
+| **GARCH(1,1)** | σ²_t = ω + αε²_{t-1} + βσ²_{t-1} |
+| **GJR-GARCH(1,1)** | σ²_t = ω + αε²_{t-1} + γI_{t-1}ε²_{t-1} + βσ²_{t-1} |
+| **FIGARCH(1,d,1)** | φ(L)(1-L)^d ε²_t = ω + [1-β(L)]ν_t |
+| **EGARCH(1,1)** | ln(σ²_t) = ω + α\|ε_{t-1}/σ_{t-1}\| + γε_{t-1}/σ_{t-1} + βln(σ²_{t-1}) |
 
 ## 🔍 Interpretation of Results
 
-### Key Findings:
 1. **GARCH-Normal models completely fail** (POF test P-Value = `nan`) due to their inability to model fat tails. They produce thousands of violations (4995-5001) when only ~50 are expected.
 
 2. **t-distribution models** significantly improve unconditional coverage (62-72 violations vs. 50 expected) but still show violation clustering, as evidenced by low Independence P-Values (< 0.05).
@@ -97,11 +164,7 @@ The visualization in the notebook shows:
 
 4. **EGARCH-t** shows improved performance over standard GARCH-t but still fails independence tests.
 
-### Risk Contribution Insights:
-- **SPY** contributes nearly 50% of portfolio risk despite being only 35% of the portfolio
-- **QQQ** contributes ~20% of risk with 30% weight - relatively efficient
-- **TLT** shows negative CVaR, indicating hedging benefits during risk-off periods
-- The negative CVaR for TLT suggests it serves as a diversifier, reducing overall portfolio risk
+5. **SPY** contributes nearly 50% of portfolio risk despite being only 35% of the portfolio, while **TLT** shows negative CVaR, indicating hedging benefits during risk-off periods.
 
 ## 🛠️ Technical Implementation
 
@@ -116,3 +179,32 @@ arch: GARCH-family model estimation
 pandas/numpy: Data manipulation and numerical computing
 scipy: Statistical testing (chi-squared distribution)
 matplotlib: Visualization
+
+🎯 Key Takeaways
+
+Simple isn't always better: Historical Simulation, while simple, significantly underestimates tail risk and fails all statistical tests.
+Distribution matters: Student's-t distributions are essential for capturing fat tails. All normal-distribution models fail catastrophically.
+Asymmetry is crucial: GJR-GARCH and EGARCH models capture the leverage effect where negative shocks increase volatility more than positive shocks, improving forecast accuracy.
+Long memory improves accuracy: FIGARCH models capture the persistent nature of volatility shocks, leading to more responsive VaR estimates during crisis periods.
+A-FIGARCH-t emerges as the winner: The combination of long memory, asymmetry, and fat tails provides the most accurate and reliable VaR estimates, passing the unconditional coverage test and showing the strongest joint test statistics.
+Risk decomposition matters: Component VaR analysis reveals that SPY contributes disproportionately to portfolio risk (49.5% of total risk with 35% weight), while TLT provides valuable diversification benefits with negative CVaR.
+
+🔬 Future Improvements
+
+Implement realized volatility measures for comparison
+Add copula-based multivariate models to capture cross-asset dependencies
+Include Expected Shortfall (ES) as an alternative coherent risk measure
+Expand to high-frequency data analysis for improved volatility estimation
+Add machine learning models (LSTM, XGBoost, Random Forest) for comparison
+Implement rolling window analysis for parameter stability testing
+Add stress testing scenarios beyond historical crises
+Include transaction costs and liquidity considerations
+📚 References
+
+Bollerslev, T. (1986). "Generalized autoregressive conditional heteroskedasticity", Journal of Econometrics, 31(3), 307-327.
+Engle, R. F. (1982). "Autoregressive conditional heteroscedasticity with estimates of the variance of UK inflation", Econometrica, 50(4), 987-1007.
+Christoffersen, P. F. (1998). "Evaluating interval forecasts", International Economic Review, 39(4), 841-862.
+Glosten, L. R., Jagannathan, R., & Runkle, D. E. (1993). "On the relation between the expected value and the volatility of the nominal excess return on stocks", Journal of Finance, 48(5), 1779-1801.
+Baillie, R. T., Bollerslev, T., & Mikkelsen, H. O. (1996). "Fractionally integrated generalized autoregressive conditional heteroskedasticity", Journal of Econometrics, 74(1), 3-30.
+J.P. Morgan/Reuters (1996). "RiskMetrics—Technical Document", Fourth Edition.
+Alexander, C. (2008). "Market Risk Analysis, Volume II: Practical Financial Econometrics", John Wiley & Sons.
